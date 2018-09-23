@@ -56,7 +56,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         node.geometry = geometry
         node.eulerAngles.x = -Float.pi / 2
         node.opacity = 0.25
-        
+        node.name = "FindedWall"
         return node
     }
     
@@ -74,6 +74,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let transform = SCNMatrix4(frame.camera.transform)
         
         ball.transform = transform
+        
+        ball.name = "Ball"
         
         let power = Float(10)
         let force = SCNVector3(-transform.m31 * power, -transform.m32 * power, -transform.m33 * power)
@@ -130,9 +132,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 */
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
-        let wall = createWall(planeAnchor: planeAnchor)
-        node.addChildNode(wall)
+            guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
+            let wall = createWall(planeAnchor: planeAnchor)
+            node.addChildNode(wall)
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
