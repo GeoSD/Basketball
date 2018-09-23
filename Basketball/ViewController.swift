@@ -64,7 +64,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         guard let frame = sceneView.session.currentFrame else { return }
         
         let ball = SCNNode(geometry: SCNSphere(radius: 0.25))
-        ball.geometry?.firstMaterial?.diffuse.contents = UIColor.orange
+        ball.geometry?.firstMaterial?.diffuse.contents = UIImage(named: "art.scnassets/firestock_basketball.jpg")
         
         let physicsBody = SCNPhysicsBody(type: .dynamic,
                                          shape: SCNPhysicsShape(node: ball, options: [SCNPhysicsShape.Option.collisionMargin: 0.01]))
