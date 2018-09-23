@@ -38,6 +38,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         let position = result.worldTransform.columns.3
         hoopNode.position = SCNVector3(position.x, position.y, position.z)
+        
+        hoopNode.physicsBody = SCNPhysicsBody(type: .static,
+                                              shape: SCNPhysicsShape(node: hoopNode,
+                                                                     options: [SCNPhysicsShape.Option.type: SCNPhysicsShape.ShapeType.concavePolyhedron]))
+        
         sceneView.scene.rootNode.addChildNode(hoopNode)
     }
     
