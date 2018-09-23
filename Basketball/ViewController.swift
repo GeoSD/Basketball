@@ -24,6 +24,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             if let result = hitTestResult.first {
                 addHoop(result: result)
                 hoopAdded = true
+                
             }
         } else {
             createBasketball()
@@ -130,19 +131,19 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
-        let floor = createWall(planeAnchor: planeAnchor)
-        node.addChildNode(floor)
+        let wall = createWall(planeAnchor: planeAnchor)
+        node.addChildNode(wall)
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
         guard let planeAnchor = anchor as? ARPlaneAnchor,
-            let floor = node.childNodes.first,
-            let geometry = floor.geometry as? SCNPlane
+            let wall = node.childNodes.first,
+            let geometry = wall.geometry as? SCNPlane
             else { return }
         geometry.width = CGFloat(planeAnchor.extent.x)
         geometry.height = CGFloat(planeAnchor.extent.z)
         
-        floor.position = SCNVector3(planeAnchor.center.x, 0, planeAnchor.center.z)
+        wall.position = SCNVector3(planeAnchor.center.x, 0, planeAnchor.center.z)
     }
     
     func session(_ session: ARSession, didFailWithError error: Error) {
