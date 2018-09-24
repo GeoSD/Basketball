@@ -45,9 +45,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         hoopNode.physicsBody = SCNPhysicsBody(type: .static,
                                               shape: SCNPhysicsShape(node: hoopNode,
                                                                      options: [SCNPhysicsShape.Option.type: SCNPhysicsShape.ShapeType.concavePolyhedron]))
-        if let findedWall = sceneView.scene.rootNode.childNode(withName: "FindedWall", recursively: true) {
-            findedWall.removeFromParentNode()
+        
+        sceneView.scene.rootNode.enumerateHierarchy { node, _ in
+            if node.name == "FindedWall" {
+                node.removeFromParentNode()
+            }
         }
+        
 //        sceneView.scene.rootNode.childNode(withName: "FindedWall", recursively: true)?.removeFromParentNode()
         sceneView.scene.rootNode.addChildNode(hoopNode)
     }
