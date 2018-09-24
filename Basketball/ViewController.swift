@@ -37,8 +37,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         guard let hoopNode = hoopScene?.rootNode.childNode(withName: "Hoop", recursively: false) else { return }
         
-        let position = result.worldTransform.columns.3
-        hoopNode.position = SCNVector3(position.x, position.y, position.z)
+        hoopNode.simdTransform = result.worldTransform
+        hoopNode.eulerAngles.x -= .pi / 2
+        
+//        let position = result.worldTransform.columns.3
+//        hoopNode.position = SCNVector3(position.x, position.y, position.z)
         
         hoopNode.physicsBody = SCNPhysicsBody(type: .static,
                                               shape: SCNPhysicsShape(node: hoopNode,
