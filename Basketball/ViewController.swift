@@ -13,6 +13,7 @@ import ARKit
 class ViewController: UIViewController, ARSCNViewDelegate {
     
     var hoopAdded = false
+    
 
     @IBOutlet var sceneView: ARSCNView!
     
@@ -24,12 +25,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             if let result = hitTestResult.first {
                 addHoop(result: result)
                 hoopAdded = true
-                
             }
         } else {
             createBasketball()
         }
-
     }
     
     func addHoop(result: ARHitTestResult) {
@@ -46,7 +45,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         hoopNode.physicsBody = SCNPhysicsBody(type: .static,
                                               shape: SCNPhysicsShape(node: hoopNode,
                                                                      options: [SCNPhysicsShape.Option.type: SCNPhysicsShape.ShapeType.concavePolyhedron]))
-        
+        if let findedWall = sceneView.scene.rootNode.childNode(withName: "FindedWall", recursively: true) {
+            findedWall.removeFromParentNode()
+        }
+//        sceneView.scene.rootNode.childNode(withName: "FindedWall", recursively: true)?.removeFromParentNode()
         sceneView.scene.rootNode.addChildNode(hoopNode)
     }
     
@@ -64,7 +66,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func createBasketball() {
-        
         guard let frame = sceneView.session.currentFrame else { return }
         
         let ball = SCNNode(geometry: SCNSphere(radius: 0.25))
@@ -134,21 +135,44 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
 */
     
+//    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+//            guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
+//            let wall = createWall(planeAnchor: planeAnchor)
+//            node.addChildNode(wall)
+//    }
+    
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        if !hoopAdded {
             guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
             let wall = createWall(planeAnchor: planeAnchor)
+//            node.name = "FindedWall"
             node.addChildNode(wall)
+        }
     }
     
+//    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+//        guard let planeAnchor = anchor as? ARPlaneAnchor,
+//            let wall = node.childNodes.first,
+//            let geometry = wall.geometry as? SCNPlane
+//            else { return }
+//        geometry.width = CGFloat(planeAnchor.extent.x)
+//        geometry.height = CGFloat(planeAnchor.extent.z)
+//
+//        wall.position = SCNVector3(planeAnchor.center.x, 0, planeAnchor.center.z)
+//    }
+    
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        guard let planeAnchor = anchor as? ARPlaneAnchor,
-            let wall = node.childNodes.first,
-            let geometry = wall.geometry as? SCNPlane
-            else { return }
-        geometry.width = CGFloat(planeAnchor.extent.x)
-        geometry.height = CGFloat(planeAnchor.extent.z)
-        
-        wall.position = SCNVector3(planeAnchor.center.x, 0, planeAnchor.center.z)
+        if !hoopAdded {
+            guard let planeAnchor = anchor as? ARPlaneAnchor,
+                let wall = node.childNodes.first,
+                let geometry = wall.geometry as? SCNPlane
+                else { return }
+            geometry.width = CGFloat(planeAnchor.extent.x)
+            geometry.height = CGFloat(planeAnchor.extent.z)
+            
+            wall.position = SCNVector3(planeAnchor.center.x, 0, planeAnchor.center.z)
+//            wall.name = "FindedWall"
+        }
     }
     
     func session(_ session: ARSession, didFailWithError error: Error) {
